@@ -1,0 +1,43 @@
+name: update-results
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 17 * * 0,3,4'
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v2
+        
+      - name: Checkout managers repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
+          
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.3'
+          
+      - name: Installed package list
+        run: apt list --installed
+        
+      - name: Remove Chrome
+        run: sudo apt purge google-chrome-stable
+      
+      - name: Install all necessary packages
+        run: pip install requests bs4 lxml pandas webdriver-manager selenium undetected_chromedriver
+
+      - name: Run the scraping script
+        run: python update-results.py
+        
+      - name: Commit and push if content changed
+        run: |-
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+          git push
