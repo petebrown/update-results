@@ -186,9 +186,9 @@ if updates:
             manager = 'Unknown'
         return manager
 
-    managers_df = pd.read_csv('./managers/data/managers_df.csv')
-    managers_df['manager_start_date'] = pd.to_datetime(managers_df.manager_start_date)
-    managers_df['manager_end_date'] = pd.to_datetime(managers_df.manager_end_date)
+    managers_df = pd.read_html("https://www.soccerbase.com/teams/team.sd?team_id=2598&teamTabs=managers")[1].rename(columns = {"Unnamed: 0": "manager_name", "FROM": "manager_start_date", "TO": "manager_end_date"})
+    managers_df.manager_start_date = pd.to_datetime(managers_df.manager_start_date)
+    managers_df.manager_end_date = managers_df.apply(lambda x: pd.to_datetime("today") if x.manager_end_date == "Present" else pd.to_datetime(x.manager_end_date), axis=1)
 
     updates_df['manager'] = updates_df.apply(lambda x : find_manager_on_date(x.game_date), axis = 1)
     updates_df[['home_goals', 'away_goals', 'goals_for', 'goals_against']] = updates_df[['home_goals', 'away_goals', 'goals_for', 'goals_against']].apply(lambda x: x.astype('string').astype('int64'))
