@@ -186,7 +186,7 @@ if updates:
             manager = 'Unknown'
         return manager
 
-    managers_df = pd.read_csv('./scrape-managers/data/managers_df.csv')
+    managers_df = pd.read_csv('./managers/data/managers_df.csv')
     managers_df['manager_start_date'] = pd.to_datetime(managers_df.manager_start_date)
     managers_df['manager_end_date'] = pd.to_datetime(managers_df.manager_end_date)
 
