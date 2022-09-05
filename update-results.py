@@ -1,4 +1,5 @@
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc
+import undetected_chromedriver.v2 as uc
 from bs4 import BeautifulSoup
 import datetime as dt
 import pandas as pd
@@ -22,7 +23,7 @@ options = [
 for option in options:
     chrome_options.add_argument(option)
 
-driver = uc.Chrome(service=chrome_service, options=chrome_options)
+driver = uc.Chrome(service=chrome_service, options=chrome_options, version_main=104)
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
