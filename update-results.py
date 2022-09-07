@@ -157,7 +157,7 @@ if updates:
         'League One': 3,
         'League One Play-Offs': 3
     }
-    updates_df['league_tier'] = df.competition.map(league_tier_map)
+    updates_df['league_tier'] = updates_df.competition.map(league_tier_map)
 
     generic_comps_map = {
         "Football League Trophy": "Associate Members' Cup",
@@ -171,7 +171,7 @@ if updates:
         "Football Conference Play-off": "Non-League",
         "National League": "Non-League"
     }
-    updates_df['generic_comp'] = df.competition.map(generic_comps_map)
+    updates_df['generic_comp'] = updates_df.competition.map(generic_comps_map)
 
     updates_df.loc[(updates_df.generic_comp.isin(["Football League", "Non-League"])), "game_type"] = "League"
     updates_df.loc[(updates_df.league_tier.isna()), "game_type"] = "Cup"
