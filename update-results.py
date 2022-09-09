@@ -70,7 +70,8 @@ for game in games:
         away_goals = final_score[1]
 
         try:
-            secondary_score = score[1]
+            secondary_score = score[1].replace('(', ' (').strip()
+            secondary_score = secondary_score.replace("(", "").replace(")", "")
         except:
             secondary_score = ''
 
