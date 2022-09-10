@@ -182,7 +182,7 @@ if updates:
         try:
             manager_index = managers_df.apply(lambda x : (input_date >= x.manager_start_date) & (input_date <= x.manager_end_date), axis = 1)
             manager = managers_df[manager_index].manager_name
-            manager = manager.iloc[0]
+            manager = manager.squeeze()
         except:
             manager = 'Unknown'
         return manager
