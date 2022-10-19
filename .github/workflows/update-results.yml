@@ -34,7 +34,7 @@ jobs:
         run: sudo apt install -y chromium-browser
       
       - name: Install all necessary packages
-        run: pip install requests beautifulsoup4 lxml pandas webdriver-manager selenium undetected_chromedriver
+        run: pip install requests beautifulsoup4 lxml pandas packaging webdriver-manager selenium undetected_chromedriver
 
       - name: Run the scraping script
         run: python update-results.py
