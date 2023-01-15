@@ -7,7 +7,7 @@ from webdriver_manager.core.utils import ChromeType
 from selenium.webdriver.chrome.service import Service
 from urllib.parse import urljoin
 
-chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM, version="109.0.5414.74").install())
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM, version="108.0.5341.0").install())
 
 chrome_options = uc.ChromeOptions()
 options = [
@@ -22,7 +22,7 @@ options = [
 for option in options:
     chrome_options.add_argument(option)
 
-driver = uc.Chrome(service=chrome_service, options=chrome_options, version_main=109)
+driver = uc.Chrome(service=chrome_service, options=chrome_options, version_main=108)
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
