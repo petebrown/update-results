@@ -22,7 +22,7 @@ options = [
 for option in options:
     chrome_options.add_argument(option)
 
-driver = uc.Chrome(service=chrome_service, options=chrome_options, version_main=108)
+driver = uc.Chrome(service=chrome_service, options=chrome_options, version_main=109)
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
