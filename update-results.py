@@ -1,32 +1,15 @@
-import undetected_chromedriver as uc
+import requests
 from bs4 import BeautifulSoup
 import datetime as dt
 import pandas as pd
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.utils import ChromeType
-from selenium.webdriver.chrome.service import Service
 from urllib.parse import urljoin
-
-chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
-
-chrome_options = uc.ChromeOptions()
-options = [
-    "--headless",
-    "--disable-gpu",
-    "--window-size=1920,1200",
-    "--ignore-certificate-errors",
-    "--disable-extensions",
-    "--no-sandbox",
-    "--disable-dev-shm-usage"
-]
-for option in options:
-    chrome_options.add_argument(option)
-
-driver = uc.Chrome(service=chrome_service, options=chrome_options)
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
-driver.get(url)
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+}
+r = requests.get(url, headers = headers)
 
 updates = []
 # Find the date of the most recent game in the existing results dataframe
@@ -34,8 +17,7 @@ df = pd.read_csv('./data/results_df.csv', parse_dates=['game_date'])
 max_date = df.game_date.max()
 max_date = pd.Timestamp(max_date)
 
-html = driver.page_source
-bs = BeautifulSoup(html, 'lxml')
+bs = BeautifulSoup(r.text, 'lxml')
 season = bs.select_one('.seasonTitle').text.split(' ')[0].replace("-", "/")
 
 games = bs.select('tbody tr')
@@ -98,9 +80,8 @@ for game in games:
             game_type = 'Cup'
             league_tier = ''
 
-        driver.get(game_url)
-        html = driver.page_source
-        bs = BeautifulSoup(html, 'lxml')
+        r = requests.get(game_url, headers = headers)
+        bs = BeautifulSoup(r.text, 'lxml')
 
         panel_rows = bs.select('.basicData tr')
 
@@ -143,8 +124,6 @@ for game in games:
             'stadium': stadium
         }
         updates.append(game_record)
-
-driver.quit()
 
 if updates:
     updates_df = pd.DataFrame(updates)
