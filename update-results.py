@@ -156,12 +156,18 @@ if updates:
     updates_df.loc[(updates_df.league_tier.isna()), "game_type"] = "Cup"
     updates_df.loc[(updates_df.competition.str.contains("Play-")), "game_type"] = "League Play-Off"
 
+    def manual_manager_fix(date, manager):
+        if date >= pd.Timestamp("2023-03-19") and manager == "Micky Mellon":
+            manager = "Ian Dawes"
+            return manager
+    
     def find_manager_on_date(input_date):
         input_date = pd.Timestamp(input_date)
         try:
             manager_index = managers_df.apply(lambda x : (input_date >= x.manager_start_date) & (input_date <= x.manager_end_date), axis = 1)
             manager = managers_df[manager_index].manager_name
             manager = manager.squeeze()
+            manager = manual_manager_fix(input_date, manager)
         except:
             manager = 'Unknown'
         return manager
