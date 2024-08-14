@@ -6,10 +6,13 @@ from urllib.parse import urljoin
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
-}
-r = requests.get(url, headers = headers)
+session = requests.Session()
+session.headers.update({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Referer': 'https://www.google.com/'
+})
+r = session.get(url, headers = headers)
 
 updates = []
 # Find the date of the most recent game in the existing results dataframe
