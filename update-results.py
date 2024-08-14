@@ -12,7 +12,7 @@ session.headers.update({
     'Accept-Language': 'en-US,en;q=0.5',
     'Referer': 'https://www.google.com/'
 })
-r = session.get(url, headers = headers)
+r = session.get(url)
 
 updates = []
 # Find the date of the most recent game in the existing results dataframe
