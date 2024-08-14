@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
 r = requests.get(url, headers = headers)
 
@@ -18,6 +18,7 @@ max_date = df.game_date.max()
 max_date = pd.Timestamp(max_date)
 
 bs = BeautifulSoup(r.text, 'lxml')
+print(bs)
 season = bs.select_one('.seasonTitle').text.split(' ')[0].replace("-", "/")
 
 games = bs.select('tbody tr')
