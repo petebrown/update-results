@@ -3,13 +3,45 @@ from bs4 import BeautifulSoup
 import datetime as dt
 import pandas as pd
 from urllib.parse import urljoin
+import asyncio
+from playwright.async_api import async_playwright
 
-url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
+async def fetch_html():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        )
+        page = await context.new_page()
+        
+        # Set extra HTTP headers
+        await page.set_extra_http_headers({
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Dest": "document",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        })
+        
+        url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
+        await page.goto(url)
+        
+        # Get the page content (HTML)
+        html_content = await page.content()
+        
+        await browser.close()
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-}
-r = requests.get(url, headers = headers)
+        return html_content
+
+# url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
+
+# headers = {
+#     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+# }
+# r = requests.get(url, headers = headers)
 
 updates = []
 # Find the date of the most recent game in the existing results dataframe
@@ -17,7 +49,9 @@ df = pd.read_csv('./data/results_df.csv', parse_dates=['game_date'])
 max_date = df.game_date.max()
 max_date = pd.Timestamp(max_date)
 
-bs = BeautifulSoup(r.text, 'lxml')
+page_source = asyncio.run(fetch_html())
+
+bs = BeautifulSoup(page_source, 'lxml')
 season = bs.select_one('.seasonTitle').text.split(' ')[0].replace("-", "/")
 
 games = bs.select('tbody tr')
