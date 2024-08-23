@@ -26,7 +26,6 @@ async def fetch_html(url):
         
         await page.goto(url)
         
-        # Get the page content (HTML)
         html_content = await page.content()
         
         await browser.close()
@@ -34,11 +33,6 @@ async def fetch_html(url):
         return html_content
 
 url = 'https://www.11v11.com/teams/tranmere-rovers/tab/matches/'
-
-# headers = {
-#     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-# }
-# r = requests.get(url, headers = headers)
 
 updates = []
 # Find the date of the most recent game in the existing results dataframe
@@ -111,7 +105,6 @@ for game in games:
             game_type = 'Cup'
             league_tier = ''
 
-        # r = requests.get(game_url, headers = headers)
         page_source = asyncio.run(fetch_html(game_url))
         bs = BeautifulSoup(page_source, 'lxml')
 
